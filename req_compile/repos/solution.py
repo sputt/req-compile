@@ -178,7 +178,9 @@ class SolutionRepository(Repository):
             sources = []
             for part in parts:
                 part = part.strip()
-                if part.startswith(("http://", "https://")):
+                if part.startswith(("http://", "https://")) or part.endswith(
+                    (".whl", ".gz", ".tgz", ".zip", ".tar", ".bz2")
+                ):
                     in_url = True
                     in_sources = False
                     url = part
@@ -246,9 +248,9 @@ class SolutionRepository(Repository):
     ) -> None:
         pkg_names = map(lambda x: x.split(" ")[0], sources)
         constraints = map(
-            lambda x: x.split(" ")[1].replace("(", "").replace(")", "")
-            if "(" in x
-            else None,
+            lambda x: (
+                x.split(" ")[1].replace("(", "").replace(")", "") if "(" in x else None
+            ),
             sources,
         )
         version = req_compile.utils.parse_version(list(req.specs)[0][1])
