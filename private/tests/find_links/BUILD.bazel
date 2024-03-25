@@ -4,7 +4,7 @@ load("//:defs.bzl", "py_reqs_compiler", "py_reqs_solution_test")
 
 py_reqs_compiler(
     name = "requirements.update",
-    allow_sdist = True,
+    allow_sdists = True,
     requirements_in = "requirements.in",
     requirements_txt = "requirements.txt",
 )
