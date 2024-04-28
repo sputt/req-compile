@@ -1,0 +1,68 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+package(default_visibility = [
+    "//req_compile:__subpackages__",
+    "//tests:__subpackages__",
+])
+
+py_library(
+    name = "dist_info",
+    srcs = ["dist_info.py"],
+    deps = [
+        "//req_compile:containers",
+        "//req_compile:errors",
+    ],
+)
+
+py_library(
+    name = "extractor",
+    srcs = ["extractor.py"],
+    deps = ["@typing_extensions"],
+)
+
+py_library(
+    name = "metadata",
+    srcs = ["metadata.py"],
+    deps = [
+        ":dist_info",
+        ":extractor",
+        ":pyproject",
+        ":source",
+        "//req_compile:containers",
+        "//req_compile:errors",
+        "//req_compile:utils",
+        "//req_compile/repos:repository",
+    ],
+)
+
+py_library(
+    name = "pyproject",
+    srcs = ["pyproject.py"],
+    deps = [
+        ":dist_info",
+        ":patch",
+        "//req_compile:containers",
+        "//req_compile:utils",
+        "@setuptools",
+        "@toml",
+    ],
+)
+
+py_library(
+    name = "patch",
+    srcs = ["patch.py"],
+)
+
+py_library(
+    name = "source",
+    srcs = ["source.py"],
+    deps = [
+        ":dist_info",
+        ":extractor",
+        "//req_compile:containers",
+        "//req_compile:errors",
+        "//req_compile:filename",
+        "//req_compile:utils",
+        "@setuptools",
+    ],
+)

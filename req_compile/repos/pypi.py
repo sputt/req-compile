@@ -21,7 +21,7 @@ from overrides import overrides
 
 from req_compile.containers import RequirementContainer
 from req_compile.errors import MetadataError
-from req_compile.metadata import extract_metadata
+from req_compile.metadata.metadata import extract_metadata
 from req_compile.repos.repository import Candidate, Repository, filename_to_candidate
 
 LOG = logging.getLogger("req_compile.repository.pypi")

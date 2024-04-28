@@ -3,4 +3,48 @@
 module(
     name = "rules_req_compile",
     version = "1.0.0rc15",
+    compatibility_level = 1,
 )
+
+bazel_dep(name = "platforms", version = "0.0.9")
+bazel_dep(name = "rules_python", version = "0.31.0")
+bazel_dep(name = "buildozer", version = "7.1.1.1")
+bazel_dep(name = "bazel_skylib", version = "1.5.0")
+
+bazel_dep(name = "rules_cc", version = "0.0.9", dev_dependency = True)
+bazel_dep(
+    name = "buildifier_prebuilt",
+    version = "6.4.0",
+    dev_dependency = True,
+)
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python", dev_dependency = True)
+python.toolchain(
+    configure_coverage_tool = True,
+    is_default = True,
+    python_version = "3.11",
+)
+
+compile = use_extension("//extensions:compile.bzl", "compile", dev_dependency = True)
+compile.python_requirements_file(src = "//:requirements.in")
+compile.python_requirements_file(src = "//:test-requirements.in")
+compile.index_url(url = "https://pypi.org/simple")
+use_repo(compile, "appdirs", "black", "isort", "mypy", "overrides", "packaging", "pylint", "pytest", "pytest_mock", "requests", "responses", "setuptools", "six", "toml", "types_appdirs", "types_requests", "types_setuptools", "types_toml", "typing_extensions", "wheel")
+
+# use_extension("//extensions:dependencies.bzl", "dependencies", dev_dependency = True)
+py_requirements_repository = use_repo_rule("@rules_req_compile//:defs.bzl", "py_requirements_repository")
+
+py_requirements_repository(
+    name = "req_compile_sdist_compiler",
+    dev_dependency = True,
+    # This solution file is cross-platform as of 2024/04/03
+    requirements_lock = "//private:sdist_requirements.txt",
+)
+
+req_compile_deps = use_extension("//extensions:compile.bzl", "compile", dev_dependency = True, isolate = True)
+req_compile_deps.index_url(url = "https://pypi.org/simple")
+req_compile_deps.python_dep(name = "flask")
+use_repo(req_compile_deps, "flask")
+
+test_deps = use_extension("//private/tests/annotations:annotations_test_deps.bzl", "req_compile_test_annotations_deps", dev_dependency = True)
+use_repo(test_deps, "req_compile_test_annotations")

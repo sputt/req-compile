@@ -1,24 +1,137 @@
-load("@req_compile_deps//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+package(default_visibility = [
+    "//req_compile:__subpackages__",
+    "//tests:__subpackages__",
+])
+
+py_library(
+    name = "utils",
+    srcs = ["utils.py"],
+    deps = ["@setuptools"],
+)
+
+py_library(
+    name = "config",
+    srcs = ["config.py"],
+    deps = ["@appdirs"],
+)
+
+py_library(
+    name = "containers",
+    srcs = ["containers.py"],
+    deps = [
+        ":utils",
+        "@packaging",
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "errors",
+    srcs = ["errors.py"],
+    deps = [
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "filename",
+    srcs = ["filename.py"],
+    deps = [
+        ":utils",
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "dists",
+    srcs = ["dists.py"],
+    deps = [
+        ":containers",
+        ":utils",
+        "//req_compile/repos:repository",
+        "@packaging",
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "versions",
+    srcs = ["versions.py"],
+    deps = [
+        ":utils",
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "compile",
+    srcs = ["compile.py"],
+    deps = [
+        ":containers",
+        ":dists",
+        ":errors",
+        ":utils",
+        ":versions",
+        "//req_compile/metadata",
+        "//req_compile/repos:repository",
+        "//req_compile/repos:source",
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "cmdline",
+    srcs = ["cmdline.py"],
+    deps = [
+        ":compile",
+        ":config",
+        ":containers",
+        ":dists",
+        ":errors",
+        ":utils",
+        ":versions",
+        "//req_compile/metadata",
+        "//req_compile/repos:findlinks",
+        "//req_compile/repos:multi",
+        "//req_compile/repos:pypi",
+        "//req_compile/repos:repository",
+        "//req_compile/repos:solution",
+        "//req_compile/repos:source",
+        "@setuptools",
+    ],
+)
+
+py_library(
+    name = "req_compile_lib",
+    srcs = [
+        "__init__.py",
+    ],
+    data = ["py.typed"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cmdline",
+    ],
+)
 
 py_binary(
     name = "req_compile",
-    srcs = glob(["**/*.py"]),
-    data = [
-        "py.typed",
-    ] + glob([
-        "**/*.pyi",
-    ]),
+    srcs = ["__main__.py"],
     main = "__main__.py",
     visibility = ["//visibility:public"],
+    deps = [":req_compile_lib"],
+)
+
+py_binary(
+    name = "req_candidates",
+    srcs = ["candidates.py"],
+    main = "candidates.py",
+    visibility = ["//visibility:public"],
     deps = [
-        requirement("appdirs"),
-        requirement("overrides"),
-        requirement("packaging"),
-        requirement("requests"),
-        requirement("setuptools"),
-        requirement("toml"),
-        requirement("typing_extensions"),
-        requirement("wheel"),
+        ":cmdline",
+        "//req_compile/repos:repository",
+        "//req_compile/repos:source",
+        "@setuptools",
     ],
 )

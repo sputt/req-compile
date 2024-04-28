@@ -133,7 +133,7 @@ get_version = _get_version
 install_deps = repositories
 
 # Note that this is not just a re-export since `py_multi_platform_requirements_repository`
-# uses selects within it's `requirement` macro which breaks the API. Instead this needs
+# uses selects within its `requirement` macro which breaks the API. Instead this needs
 # to return simple targets, thus the alias targets are relied on here.
 def requirement(name):
     \"\"\"rules_python compatibility macro\"\"\"
@@ -274,7 +274,7 @@ def parse_lockfile(
         content (str): The string content of a requirements lock file.
         repository_name (str): The name of the current repository
         annotations (dict): Annotation data for packages in the current lock file.
-        lockfile (Label): The label of the lockfile contianing `content`.
+        lockfile (Label): The label of the lockfile containing `content`.
         constraint (Label): An optional Label which represents the constraint value of the package.
 
     Returns:
@@ -621,7 +621,7 @@ alias(
 ```
 
 A very important detail for generating python dependencies is sdist (source distribution)
-dependencies are assumed to be incapable of yielding determinsitic outputs. Therefore, any
+dependencies are assumed to be incapable of yielding deterministic outputs. Therefore, any
 case where a sdist (source distribution) is found in a solution file passed to either
 `requirements_lock` or `requirements_locks`, the dependencies should not be considered
 byte-for-byte reproducible. It is highly recommended solution files contain all wheels

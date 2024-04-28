@@ -1,0 +1,26 @@
+"""req-compile"""
+
+module(
+    name = "rules_req_compile_consumer_dep",
+    version = "1.0",
+)
+
+bazel_dep(name = "rules_python", version = "0.31.0")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    is_default = True,
+    python_version = "3.11",
+)
+
+bazel_dep(name = "rules_req_compile")
+local_path_override(
+    module_name = "rules_req_compile",
+    path = "../../..",
+)
+
+reqs = use_extension("@rules_req_compile//:reqs.bzl", "req_compile")
+reqs.index_url(url = "https://pypi.org/simple")
+reqs.requirement(name = "requests")
+use_repo(reqs, "requests")

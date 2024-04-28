@@ -25,9 +25,8 @@ py_package_annotation_target(
 )
 """
 
-def req_compile_test_annotations_deps():
-    maybe(
-        py_requirements_repository,
+def _req_compile_test_annotations_deps_impl(ctx):
+    py_requirements_repository(
         name = "req_compile_test_annotations",
         requirements_locks = {
             Label("//private/tests/annotations:requirements.linux.txt"): "@platforms//os:linux",
@@ -60,3 +59,5 @@ def req_compile_test_annotations_deps():
             ),
         },
     )
+
+req_compile_test_annotations_deps = module_extension(implementation=_req_compile_test_annotations_deps_impl)

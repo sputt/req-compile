@@ -9,8 +9,7 @@ common --enable_platform_specific_config
 startup --windows_enable_symlinks
 build:windows --enable_runfiles
 
-# Speed up builds by skipping the creation of runfile links
-build --nobuild_runfile_links
+common --experimental_isolated_extension_usages
 
 # https://github.com/bazelbuild/bazel/issues/8195
 build --incompatible_disallow_empty_glob=true
@@ -24,8 +23,7 @@ build --incompatible_default_to_explicit_init_py
 # Ensure errors are logged to the console
 build --test_output=errors
 
-# TODO: Setup bzlmod
-common --noenable_bzlmod
+coverage --combined_report=lcov
 
 ###############################################################################
 ## Custom user flags

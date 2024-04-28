@@ -283,7 +283,7 @@ def _create_dist_from_path(path: str) -> RequirementContainer:
         A requirement container to compiling requirements for this path.
     """
     try:
-        dist = req_compile.metadata.extract_metadata(path)
+        dist = req_compile.metadata.metadata.extract_metadata(path)
     except req_compile.errors.MetadataError:
         dist = None
 
