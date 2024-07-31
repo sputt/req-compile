@@ -1,0 +1,23 @@
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "versions_test",
+    size = "small",
+    srcs = ["test_versions.py"],
+    main = "test_versions.py",
+    deps = [
+        "//req_compile:versions",
+        "@pytest",
+    ],
+)
+
+py_test(
+    name = "utils_test",
+    size = "small",
+    srcs = ["test_utils.py"],
+    main = "test_utils.py",
+    deps = [
+        "//req_compile:utils",
+        "@pytest",
+    ],
+)
